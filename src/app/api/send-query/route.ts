@@ -4,14 +4,14 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD,
+    user: "quickhealth971@gmail.com",
+    pass: process.env.NEXT_PUBLIC_API_KEY,
   },
 });
 
-function generateEmailTemplate(name: string, email: string, message: string) {
+function generateEmailTemplate(name: string, email: string, message: string, mobile: string) {
   const currentDate = new Date().toLocaleDateString();
-  
+
   return `
     <!DOCTYPE html>
     <html>
@@ -96,6 +96,10 @@ function generateEmailTemplate(name: string, email: string, message: string) {
               <div class="field-label">Email:</div>
               <div class="field-value">${email}</div>
             </div>
+             <div class="field">
+              <div class="field-label">mobile:</div>
+              <div class="field-value">${mobile}</div>
+            </div>
 
             <div class="field">
               <div class="field-label">Message:</div>
@@ -116,13 +120,13 @@ function generateEmailTemplate(name: string, email: string, message: string) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, message } = body;
+    const { patientName, email, message, mobile } = body;
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.RECIPIENT_EMAIL,
-      subject: `New Contact Form Submission from ${name}`,
-      html: generateEmailTemplate(name, email, message),
+      from: "quickhealth971@gmail.com",
+      to: "quickhealth971@gmail.com",
+      subject: `New Contact Form Submission from ${patientName}`,
+      html: generateEmailTemplate(patientName, email, message, mobile),
     };
 
     await transporter.sendMail(mailOptions);
@@ -134,7 +138,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error sending email:', error);
     return NextResponse.json(
-      { error: 'Failed to send email' },
+      { message: 'Failed to send email' },
       { status: 500 }
     );
   }
