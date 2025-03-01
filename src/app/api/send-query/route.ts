@@ -5,7 +5,7 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: "quickhealth971@gmail.com",
-    pass: process.env.NEXT_PUBLIC_API_KEY,
+    pass: process.env.NEXT_PUBLIC_API_KEY ||"mqms lqlm whtt coop",
   },
 });
 
